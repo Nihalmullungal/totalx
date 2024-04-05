@@ -2,7 +2,13 @@ abstract class LoginState {}
 
 class InitialLoginState extends LoginState {}
 
+class NumberNotValidState extends LoginState {}
+
 class GetOtpClickedState extends LoginState {}
+
+class GetOtpSentState extends LoginState {}
+
+class GetOtpfailedState extends LoginState {}
 
 class OtpRunningState extends LoginState {}
 
