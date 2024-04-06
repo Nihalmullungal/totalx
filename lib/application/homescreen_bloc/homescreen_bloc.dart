@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -12,13 +10,21 @@ import 'package:totalx/presentation/common/appconstants.dart';
 
 class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
   HomeScreenBloc() : super(HomeScreenInitialState()) {
+    //////////////////// to logout  ////////////////////////
+
     on<LogoutClickedEvent>((event, emit) async {
       await AppConstants.logout();
       emit(LogoutClickedState());
     });
+
+    //////////////////// to select a image of user ////////////////////////
+
     on<ImageSelectedEvent>((event, emit) {
       emit(ImageSelectedState());
     });
+
+    //////////////////// to add a user ////////////////////////
+
     on<SaveClickedEvent>((event, emit) async {
       emit(ModalLoadingState());
       final _image = await imageUpload(selectedImage.toString());
@@ -31,14 +37,26 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
       isSearch = false;
       emit(UploadDoneState());
     });
+
+    //////////////////// to handel error while adding a user ////////////////////////
+
     on<NameFieldErrorEvent>((event, emit) => emit(NameFieldErrorState()));
     on<AgeFieldErrorEvent>((event, emit) => emit(AgeFieldErrorState()));
     on<ImageNotAddedEvent>((event, emit) => emit(ImageNotAddedState()));
-    on<SearchEvent>((event, emit) => emit(SearchState()));
+
+    //////////////////// to search a user ////////////////////////
+
+    on<SearchEvent>((event, emit) {
+      isSort = false;
+      emit(SearchState());
+    });
+
+    //////////////////// to sort a user ////////////////////////
+
     on<SortClickedEvent>((event, emit) {
       isSort = true;
+      searchcont.clear();
       sortingIndex = event.index;
-      // toSort();
       emit(SortClickedState());
     });
   }
@@ -73,12 +91,16 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     }
   }
 
+  //////////////////// to image selector ////////////////////////
+
   Future<void> imageSelector() async {
     final ImagePicker picker = ImagePicker();
     final _image = await picker.pickImage(source: ImageSource.gallery);
     selectedImage = _image?.path;
     add(ImageSelectedEvent());
   }
+
+  //////////////////// to clear all field ////////////////////////
 
   clearAllField() {
     selectedImage = null;
@@ -87,51 +109,13 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     searchcont.clear();
   }
 
+  //////////////////// function to search a user ////////////////////////
+
   onSearchChanged() {
     isSearch = true;
-    // toAdd();
     if (debouncer?.isActive ?? false) debouncer?.cancel();
     debouncer = Timer(const Duration(milliseconds: 500), () {
-      // searchUser();
       add(SearchEvent());
     });
   }
-
-  // toAdd() async {
-  //   searchUserList.clear();
-  //   for (var ele in allUserList) {
-  //     searchUserList.add(ele);
-  //   }
-  // }
-
-  // searchUser() async {
-  //   searchUserList.clear();
-  //   for (var ele in allUserList) {
-  //     if (ele["name"]
-  //         .toString()
-  //         .toLowerCase()
-  //         .contains(searchcont.text.toLowerCase())) {
-  //       searchUserList.add(ele);
-  //     }
-  //   }
-  // }
-
-  // toSort() async {
-  //   searchUserList.clear();
-  //   for (var ele in allUserList) {
-  //     if (sortingIndex == 0) {
-  //       searchUserList.add(ele);
-  //     } else if (sortingIndex == 1) {
-  //       if (ele["age"] >= 60) {
-  //         searchUserList.add(ele);
-  //       } else if (sortingIndex == 2) {
-  //         if (ele["age"] < 60) {
-  //           searchUserList.add(ele);
-  //         }
-  //       } else {
-  //         searchUserList.clear();
-  //       }
-  //     }
-  //   }
-  // }
 }
