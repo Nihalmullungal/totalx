@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:totalx/application/login_bloc/login_event.dart';
 import 'package:totalx/application/login_bloc/login_state.dart';
+import 'package:totalx/presentation/common/appconstants.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc() : super(InitialLoginState()) {
@@ -25,6 +26,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     });
     on<GetOtpClickedEvent>((event, emit) async {
       emit(LoginLoadingState());
+
       await FirebaseAuth.instance.verifyPhoneNumber(
         verificationCompleted: (AuthCredential phoneAuthCredential) async {},
         codeSent: (verificationId, forceResendingToken) {
@@ -39,13 +41,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           result = verificationId;
         },
         timeout: const Duration(seconds: 60),
-        phoneNumber: "+919846298210",
+        phoneNumber: "+917994298210",
       );
     });
     on<SubmitOtpClickedEvent>((event, emit) async {
       emit(LoginLoadingState());
       await otpVerification();
       await Future.delayed(const Duration(seconds: 5));
+      AppConstants.setSharedPre(true);
       emit(SubmitOtpClickedState());
     });
     on<GetOtpSentEvent>((event, emit) => emit(GetOtpSentState()));
@@ -69,8 +72,4 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     await FirebaseAuth.instance.signInWithCredential(response);
     return;
   }
-
-//////////////////////////// otp checking //////////////////////
-
-  Future<void> otpchecking() async {}
 }

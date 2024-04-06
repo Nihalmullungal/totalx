@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:totalx/application/splash_cubit/splash_cubit.dart';
 import 'package:totalx/application/splash_cubit/splash_state.dart';
+import 'package:totalx/presentation/home_screen/home_screen.dart';
 import 'package:totalx/presentation/login_screen/login_screen.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -18,6 +19,12 @@ class SplashScreen extends StatelessWidget {
             Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(
                   builder: (context) => const LoginScreen(),
+                ),
+                (route) => false);
+          } else if (state is AlreadyLoginSplashState) {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                  builder: (context) => const HomeScreen(),
                 ),
                 (route) => false);
           }
