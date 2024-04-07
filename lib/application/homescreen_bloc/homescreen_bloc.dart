@@ -39,7 +39,7 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
       emit(UploadDoneState());
     });
 
-    //////////////////// to handel error while adding a user ////////////////////////
+    //////////////////// to handle error while adding a user ////////////////////////
 
     on<NameFieldErrorEvent>((event, emit) => emit(NameFieldErrorState()));
     on<AgeFieldErrorEvent>((event, emit) => emit(AgeFieldErrorState()));
