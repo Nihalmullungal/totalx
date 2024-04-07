@@ -15,7 +15,7 @@ homeSortModal(BuildContext ctx) {
           final homec = BlocProvider.of<HomeScreenBloc>(contex);
           return GestureDetector(
             child: Container(
-              height: MediaQuery.of(context).size.height * .3,
+              height: MediaQuery.of(context).size.height * .2,
               color: Colors.black26,
               child: Column(
                   children: List.generate(3, (index) {
