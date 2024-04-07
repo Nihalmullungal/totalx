@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totalx/application/login_bloc/login_bloc.dart';
 import 'package:totalx/application/login_bloc/login_event.dart';
 import 'package:totalx/application/login_bloc/login_state.dart';
+import 'package:totalx/presentation/common/custom_snackbar.dart';
 import 'package:totalx/presentation/home_screen/home_screen.dart';
 import 'package:totalx/presentation/login_screen/otp_verifaication_screen/otp_verifiaction_screen.dart';
 
@@ -19,6 +20,7 @@ class LoginButton extends StatelessWidget {
       child: BlocConsumer<LoginBloc, LoginState>(
         listener: (contex, state) {
           if (state is GetOtpSentState) {
+            customSnackBar(context, "OTP sent", true, false);
             Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(
                   builder: (context) => const OtpVerificationScreen()),
@@ -26,15 +28,17 @@ class LoginButton extends StatelessWidget {
             );
           }
           if (state is SubmitOtpClickedState) {
+            customSnackBar(context, "Login Succesfully", true, false);
             Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (context) => const HomeScreen()),
                 (route) => false);
           }
           if (state is NumberNotValidState) {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text("enter a valid phone number"),
-              backgroundColor: Colors.red,
-            ));
+            customSnackBar(context, "enter a valid phone number", false, false);
+          } else if (state is WrongOtpClickedState) {
+            customSnackBar(context, "wrong OTP", false, false);
+          } else if (state is GetOtpFailedEvent) {
+            customSnackBar(context, "failed to get OTP", false, false);
           }
         },
         builder: (context, state) {
@@ -45,12 +49,19 @@ class LoginButton extends StatelessWidget {
           } else {
             return ElevatedButton(
               onPressed: () async {
-                BlocProvider.of<LoginBloc>(context).phoneCont.text.length == 10
-                    ? BlocProvider.of<LoginBloc>(context).add(isGetOtp
-                        ? GetOtpClickedEvent()
-                        : SubmitOtpClickedEvent())
+                isGetOtp
+                    ? BlocProvider.of<LoginBloc>(context)
+                                .phoneCont
+                                .text
+                                .trim()
+                                .length ==
+                            10
+                        ? BlocProvider.of<LoginBloc>(context)
+                            .add(GetOtpClickedEvent(isGetOtpPage: isGetOtp))
+                        : BlocProvider.of<LoginBloc>(context)
+                            .add(NumberNotValidEvent())
                     : BlocProvider.of<LoginBloc>(context)
-                        .add(NumberNotValidEvent());
+                        .add(SubmitOtpClickedEvent());
               },
               style: ElevatedButton.styleFrom(
                   minimumSize: const Size.fromHeight(50),

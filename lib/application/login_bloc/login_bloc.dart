@@ -11,19 +11,33 @@ import 'package:totalx/presentation/common/appconstants.dart';
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc() : super(InitialLoginState()) {
     on<OtpTimerRunningEvent>((event, emit) async {
-      await Future.delayed(const Duration(seconds: 1));
-      timer--;
-      emit(OtpRunningState());
+      if (event.isResend) {
+        add(GetOtpSentEvent());
+      }
+      await Future.delayed(const Duration(seconds: 1), () {
+        timer = event.timer - 1;
+
+        if (timer > 0) {
+          isTimerFinished = false;
+          emit(OtpRunningState());
+        } else {
+          add(OtpTimerFinishedEvent());
+        }
+      });
     });
     on<OtpTimerFinishedEvent>((event, emit) {
       isTimerFinished = true;
+      timer = 0;
       emit(OtpTimerFinishedState());
     });
     on<ResendOtpClickedEvent>((event, emit) {
-      isTimerFinished = false;
-      timer = 60;
       emit(ResendOtpClickedState());
+      add(GetOtpClickedEvent(isGetOtpPage: false));
     });
+    on<GetOtpFailedEvent>((event, emit) => emit(GetOtpfailedState()));
+
+    ///////////////// get otp event ////////////////
+
     on<GetOtpClickedEvent>((event, emit) async {
       emit(LoginLoadingState());
 
@@ -31,29 +45,53 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         verificationCompleted: (AuthCredential phoneAuthCredential) async {},
         codeSent: (verificationId, forceResendingToken) {
           result = verificationId;
-          add(GetOtpSentEvent());
+          event.isGetOtpPage
+              ? add(GetOtpSentEvent())
+              : add(OtpTimerRunningEvent(timer: 60, isResend: true));
         },
-        verificationFailed: (error) {
-          emit(GetOtpfailedState());
+        verificationFailed: (error) async {
+          add(GetOtpFailedEvent());
           result = "failed";
         },
         codeAutoRetrievalTimeout: (verificationId) {
+          add(GetOtpFailedEvent());
           result = verificationId;
         },
         timeout: const Duration(seconds: 60),
-        phoneNumber: "+917994298210",
+        phoneNumber: "+91${phoneCont.text}",
       );
     });
+
+////////////////// verify otp event ///////////////
+
     on<SubmitOtpClickedEvent>((event, emit) async {
       emit(LoginLoadingState());
       await otpVerification();
       await Future.delayed(const Duration(seconds: 5));
-      AppConstants.setSharedPre(true);
-      emit(SubmitOtpClickedState());
     });
+
+///////////// to navigate verifaction page ////////////////
+
     on<GetOtpSentEvent>((event, emit) => emit(GetOtpSentState()));
+///////////// to navigate verifaction page ////////////////
+
+    on<SubmitOtpClickedSuccessEvent>(
+        (event, emit) => emit(SubmitOtpClickedState()));
+
+//////////////////////// to throw not valid number error ////////////////
+
     on<NumberNotValidEvent>((event, emit) => emit(NumberNotValidState()));
+
+    //////////////////////// to throw not valid number error ////////////////
+
+    on<WrongOtpClickedEvent>((event, emit) => emit(WrongOtpClickedState()));
+
+    //////////////////////////////// resend otp event /////////////////////
+    on<ResendOtpSentEvent>((event, emit) => emit(ResendOtpSentState()));
   }
+
+  //////////////// variable //////////////////////
+
   String result = "failed";
   OtpFieldController otpController = OtpFieldController();
   TextEditingController phoneCont = TextEditingController();
@@ -64,12 +102,21 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   //////////////////////// phone verification////////////////
 
   Future<void> otpVerification() async {
-    log(otp.toString());
-    log(result);
-    final response = PhoneAuthProvider.credential(
-        verificationId: result, smsCode: otp.toString());
+    try {
+      final response = PhoneAuthProvider.credential(
+          verificationId: result, smsCode: otp.toString());
 
-    await FirebaseAuth.instance.signInWithCredential(response);
+      await FirebaseAuth.instance.signInWithCredential(response);
+      add(SubmitOtpClickedSuccessEvent());
+      AppConstants.setSharedPre(true);
+      phoneCont.clear();
+      timer = 60;
+      isTimerFinished = false;
+    } catch (e) {
+      log("paaali$e");
+      add(WrongOtpClickedEvent());
+    }
+
     return;
   }
 }

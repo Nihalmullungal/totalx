@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totalx/application/homescreen_bloc/homescreen_bloc.dart';
 import 'package:totalx/application/homescreen_bloc/homescreen_event.dart';
 import 'package:totalx/application/homescreen_bloc/homescreen_state.dart';
+import 'package:totalx/presentation/common/custom_snackbar.dart';
 import 'package:totalx/presentation/common/font_theme.dart';
+import 'package:totalx/presentation/home_screen/widgets/custom_dialog.dart';
 import 'package:totalx/presentation/login_screen/login_screen.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -39,6 +40,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     BlocListener<HomeScreenBloc, HomeScreenState>(
                       listener: (context, state) {
                         if (state is LogoutClickedState) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                              "Logout succesfully",
+                              style: FontTheme.subHeading,
+                            ),
+                            backgroundColor: Colors.green,
+                          ));
                           Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
                                 builder: (context) => const LoginScreen(),
@@ -48,8 +56,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       },
                       child: IconButton(
                           onPressed: () {
-                            BlocProvider.of<HomeScreenBloc>(context)
-                                .add(LogoutClickedEvent());
+                            customDialog(context);
                           },
                           icon: const Icon(
                             Icons.logout,

@@ -40,6 +40,11 @@ class FontTheme {
       fontSize: 14,
       fontWeight: FontWeight.w600,
       color: Colors.red);
+  static TextStyle logout = const TextStyle(
+      fontFamily: "Montserrat",
+      fontSize: 14,
+      fontWeight: FontWeight.w600,
+      color: Colors.green);
   static TextStyle resend = const TextStyle(
       fontFamily: "Montserrat",
       fontSize: 14,

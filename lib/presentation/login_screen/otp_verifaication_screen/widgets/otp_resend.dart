@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totalx/application/login_bloc/login_bloc.dart';
@@ -10,14 +12,16 @@ class OtpResend extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loginCont = BlocProvider.of<LoginBloc>(context);
     return Column(
       children: [
         BlocBuilder<LoginBloc, LoginState>(
           builder: (context, state) {
-            final loginCont = context.read<LoginBloc>();
-            loginCont.timer != 0
-                ? loginCont.add(OtpTimerRunningEvent())
-                : loginCont.add(OtpTimerFinishedEvent());
+            !loginCont.isTimerFinished
+                ? loginCont.add(OtpTimerRunningEvent(
+                    timer: loginCont.timer, isResend: false))
+                : log("------  state = $state");
+
             return Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -26,7 +30,7 @@ class OtpResend extends StatelessWidget {
                     const SizedBox(
                       height: 8,
                     ),
-                    loginCont.isTimerFinished
+                    state is OtpTimerFinishedState
                         ? const SizedBox()
                         : Text(
                             "${loginCont.timer.toString()} Sec",

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:totalx/application/homescreen_bloc/homescreen_bloc.dart';
 import 'package:totalx/application/homescreen_bloc/homescreen_event.dart';
 import 'package:totalx/application/homescreen_bloc/homescreen_state.dart';
-import 'package:totalx/presentation/common/custom_snacbar.dart';
+import 'package:totalx/presentation/common/custom_snackbar.dart';
 import 'package:totalx/presentation/common/font_theme.dart';
 
 class ModalButton extends StatelessWidget {
@@ -37,13 +37,13 @@ class ModalButton extends StatelessWidget {
         BlocConsumer<HomeScreenBloc, HomeScreenState>(
           listener: (context, state) {
             if (state is NameFieldErrorState) {
-              customSnackBar(context, "Enter a valid Name", false);
+              customSnackBar(context, "Enter a valid Name", false, true);
             } else if (state is AgeFieldErrorState) {
-              customSnackBar(context, "Enter a valid Age", false);
+              customSnackBar(context, "Enter a valid Age", false, true);
             } else if (state is ImageNotAddedState) {
-              customSnackBar(context, "please a select a image", false);
+              customSnackBar(context, "please a select a image", false, true);
             } else if (state is UploadDoneState) {
-              customSnackBar(context, "user added successfully", true);
+              customSnackBar(context, "user added successfully", true, true);
             }
           },
           builder: (context, state) {

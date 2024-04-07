@@ -18,4 +18,8 @@ class LoginLoadingState extends LoginState {}
 
 class ResendOtpClickedState extends LoginState {}
 
+class ResendOtpSentState extends LoginState {}
+
+class WrongOtpClickedState extends LoginState {}
+
 class SubmitOtpClickedState extends LoginState {}

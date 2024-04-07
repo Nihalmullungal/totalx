@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -27,11 +28,11 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
 
     on<SaveClickedEvent>((event, emit) async {
       emit(ModalLoadingState());
-      final _image = await imageUpload(selectedImage.toString());
+      final image = await imageUpload(selectedImage.toString());
       final obj = UserModal(
           name: namecont.text.trim(),
           age: int.parse(agecont.text),
-          image: _image);
+          image: image);
       await addUser(obj);
       clearAllField();
       isSearch = false;
@@ -43,6 +44,12 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     on<NameFieldErrorEvent>((event, emit) => emit(NameFieldErrorState()));
     on<AgeFieldErrorEvent>((event, emit) => emit(AgeFieldErrorState()));
     on<ImageNotAddedEvent>((event, emit) => emit(ImageNotAddedState()));
+
+    //////////////////// to show users ////////////////////////
+    on<ShowUserEvent>((event, emit) {
+      showUserList(event.val);
+      emit(ShowUserState());
+    });
 
     //////////////////// to search a user ////////////////////////
 
@@ -71,8 +78,7 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
   TextEditingController searchcont = TextEditingController();
   bool isSearch = false;
   bool isSort = false;
-  List<dynamic> allUserList = [];
-  List<dynamic> searchUserList = [];
+  List<QueryDocumentSnapshot> userList = [];
   int sortingIndex = 0;
   checking() async {
     if (namecont.text.isEmpty) {
@@ -117,5 +123,25 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     debouncer = Timer(const Duration(milliseconds: 500), () {
       add(SearchEvent());
     });
+  }
+
+  /////////////////
+  showUserList(List<QueryDocumentSnapshot<Map<String, dynamic>>> val) async {
+    //  final List<QueryDocumentSnapshot> filteredDocs =
+    userList = val.where((doc) {
+      final Map<String, dynamic> data = doc.data();
+      final fieldValue =
+          isSort ? data["age"] : data['name'].toString().toLowerCase();
+      if (isSort) {
+        if (sortingIndex == 0) {
+          return true;
+        } else if (sortingIndex == 1) {
+          return fieldValue >= 60;
+        } else if (sortingIndex == 2) {
+          return fieldValue < 60;
+        }
+      }
+      return fieldValue.contains(searchcont.text.toLowerCase());
+    }).toList();
   }
 }

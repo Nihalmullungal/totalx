@@ -6,6 +6,10 @@ class ListViewImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CircleAvatar(radius: 40, backgroundImage: NetworkImage(image));
+    return CircleAvatar(
+      radius: 40,
+      foregroundImage: NetworkImage(image),
+      backgroundImage: const AssetImage("assets/images/1user.png"),
+    );
   }
 }
