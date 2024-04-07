@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,9 +32,9 @@ class HomeListView extends StatelessWidget {
           return Center(
               child: Lottie.asset("assets/lottie/No data.json", height: 250));
         } else {
-          homec.add(ShowUserEvent(val: snapshot.data!.docs));
           return BlocBuilder<HomeScreenBloc, HomeScreenState>(
             builder: (context, state) {
+              homec.add(ShowUserEvent(val: snapshot.data!.docs));
               return homec.userList.isNotEmpty
                   ? Expanded(
                       child: SizedBox(
