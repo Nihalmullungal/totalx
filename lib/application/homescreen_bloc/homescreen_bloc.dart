@@ -6,7 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:totalx/application/homescreen_bloc/homescreen_event.dart';
 import 'package:totalx/application/homescreen_bloc/homescreen_state.dart';
 import 'package:totalx/domain/functions/firebase_operation.dart';
-import 'package:totalx/domain/user_modal.dart';
+import 'package:totalx/domain/modals/user_modal/user_modal.dart';
 import 'package:totalx/presentation/common/appconstants.dart';
 
 class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {

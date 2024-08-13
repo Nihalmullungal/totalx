@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:totalx/domain/user_modal.dart';
+import 'package:totalx/domain/modals/user_modal/user_modal.dart';
 import 'package:totalx/presentation/common/firebase_constants.dart';
 
 ///////////////////// to upload image ////////////////////
