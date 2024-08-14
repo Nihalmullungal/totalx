@@ -27,7 +27,9 @@ class HomeListView extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         } else if (snapshot.hasError) {
-          return const Text("No data");
+          return Center(
+              child:
+                  Lottie.asset("assets/lottie/server_error.json", height: 250));
         } else if (snapshot.hasData && snapshot.data!.docs.isEmpty) {
           return Center(
               child: Lottie.asset("assets/lottie/No data.json", height: 250));
