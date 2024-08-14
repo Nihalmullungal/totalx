@@ -27,10 +27,12 @@ Future<String> imageUpload(String image) async {
 
 Future<void> addUser(UserModal val) async {
   try {
-    await FirebaseFirestore.instance.collection(FirebaseConstants.user).add({
-      FirebaseConstants.name: val.name,
-      FirebaseConstants.age: val.age,
-      FirebaseConstants.image: val.image
+    await Future.delayed(const Duration(seconds: 3), () async {
+      await FirebaseFirestore.instance.collection(FirebaseConstants.user).add({
+        FirebaseConstants.name: val.name,
+        FirebaseConstants.age: val.age,
+        FirebaseConstants.image: val.image
+      });
     });
   } catch (e) {
     log("error while adding user : ${e.toString()}");

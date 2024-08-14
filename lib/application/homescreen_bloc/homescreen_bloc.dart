@@ -28,15 +28,20 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
 
     on<SaveClickedEvent>((event, emit) async {
       emit(ModalLoadingState());
-      final image = await imageUpload(selectedImage.toString());
-      final obj = UserModal(
-          name: namecont.text.trim(),
-          age: int.parse(agecont.text),
-          image: image);
-      await addUser(obj);
-      clearAllField();
-      isSearch = false;
-      emit(UploadDoneState());
+      try {
+        final image = await imageUpload(selectedImage.toString());
+        final obj = UserModal(
+            name: namecont.text.trim(),
+            age: int.parse(agecont.text),
+            image: image);
+        await addUser(obj);
+        clearAllField();
+        isSearch = false;
+
+        emit(UploadDoneState());
+      } catch (e) {
+        emit(UploadErrorState());
+      }
     });
 
     //////////////////// to handle error while adding a user ////////////////////////

@@ -43,7 +43,9 @@ class ModalButton extends StatelessWidget {
             } else if (state is ImageNotAddedState) {
               customSnackBar(context, "please a select a image", false, true);
             } else if (state is UploadDoneState) {
-              customSnackBar(context, "user added successfully", true, true);
+              customSnackBar(context, "user added successfully", true, false);
+            } else if (state is UploadErrorState) {
+              customSnackBar(context, "error while adding data", false, true);
             }
           },
           builder: (context, state) {

@@ -18,6 +18,8 @@ class SaveClickedState extends HomeScreenState {}
 
 class UploadDoneState extends HomeScreenState {}
 
+class UploadErrorState extends HomeScreenState {}
+
 class ShowUserState extends HomeScreenState {}
 
 class SearchState extends HomeScreenState {}

@@ -19,23 +19,21 @@ homeSortModal(BuildContext ctx) {
               color: Colors.black26,
               child: Column(
                   children: List.generate(3, (index) {
-                return GestureDetector(
-                    onTap: () {
-                      homec.add(SortClickedEvent(index: index));
-                      Navigator.of(ctx).pop();
-                    },
-                    child: Row(
-                      children: [
-                        Radio(
-                            value: homec.sortingIndex == index ? true : false,
-                            groupValue: true,
-                            onChanged: (value) {}),
-                        Text(
-                          names[index],
-                          style: FontTheme.subHeading,
-                        )
-                      ],
-                    ));
+                return Row(
+                  children: [
+                    Radio(
+                        value: homec.sortingIndex == index ? true : false,
+                        groupValue: true,
+                        onChanged: (value) {
+                          homec.add(SortClickedEvent(index: index));
+                          Navigator.of(ctx).pop();
+                        }),
+                    Text(
+                      names[index],
+                      style: FontTheme.subHeading,
+                    )
+                  ],
+                );
               })),
             ),
           );

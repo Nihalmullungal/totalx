@@ -13,7 +13,7 @@ class ListViewName extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          name,
+          name.toUpperCase(),
           style: FontTheme.heading,
         ),
         const SizedBox(

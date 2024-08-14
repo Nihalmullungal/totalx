@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:totalx/presentation/common/font_theme.dart';
 import 'package:totalx/presentation/home_screen/widgets/home_screen/home_listview.dart';
 import 'package:totalx/presentation/home_screen/widgets/home_screen/home_search_field.dart';
-import 'package:totalx/presentation/home_screen/widgets/modal_sheet/custom_app_bar.dart';
+import 'package:totalx/presentation/common/custom_app_bar.dart';
 import 'package:totalx/presentation/home_screen/widgets/modal_sheet/custom_modal_sheet.dart';
 
 class HomeScreen extends StatelessWidget {

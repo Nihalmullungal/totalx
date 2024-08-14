@@ -9,7 +9,7 @@ customSnackBar(BuildContext ctx, String message, bool isSuccess, bool isAdd) {
           bottom: isAdd
               ? (MediaQuery.of(ctx).size.height -
                       MediaQuery.of(ctx).viewInsets.bottom) -
-                  160
+                  MediaQuery.of(ctx).size.height * 0.2
               : 0,
           left: 10,
           right: 10),
