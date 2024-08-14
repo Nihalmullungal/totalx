@@ -127,7 +127,6 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
 
   /////////////////
   showUserList(List<QueryDocumentSnapshot<Map<String, dynamic>>> val) async {
-    //  final List<QueryDocumentSnapshot> filteredDocs =
     userList = val.where((doc) {
       final Map<String, dynamic> data = doc.data();
       final fieldValue =

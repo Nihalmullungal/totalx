@@ -33,6 +33,6 @@ Future<void> addUser(UserModal val) async {
       FirebaseConstants.image: val.image
     });
   } catch (e) {
-    log(e.toString());
+    log("error while adding user : ${e.toString()}");
   }
 }

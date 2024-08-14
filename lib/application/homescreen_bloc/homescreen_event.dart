@@ -4,9 +4,7 @@ abstract class HomeScreenEvent {}
 
 class LogoutClickedEvent extends HomeScreenEvent {}
 
-class ImageSelectedEvent extends HomeScreenEvent {
-  // final String imgselected;
-}
+class ImageSelectedEvent extends HomeScreenEvent {}
 
 class HomeScreenStartedEvent extends HomeScreenEvent {}
 

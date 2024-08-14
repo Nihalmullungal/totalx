@@ -15,7 +15,6 @@ class GetOtpSentEvent extends LoginEvent {}
 class OtpTimerRunningEvent extends LoginEvent {
   final int timer;
   final bool isResend;
-
   OtpTimerRunningEvent({
     required this.timer,
     required this.isResend,

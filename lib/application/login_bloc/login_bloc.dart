@@ -16,7 +16,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       }
       await Future.delayed(const Duration(seconds: 1), () {
         timer = event.timer - 1;
-
         if (timer > 0) {
           isTimerFinished = false;
           emit(OtpRunningState());
